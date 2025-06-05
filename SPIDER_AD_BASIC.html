@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hammer Strength Timing Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fffefe;
+      background-image: url("hammer_game_back.jpg");
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .meter-box {
+      position: relative;
+      width: 200px;
+      height: 400px;
+      background-image: url("meter_box.jpg");
+      background-size: cover;
+      background-position: center;
+      margin-bottom: 10px;
+    }
+
+    .needle {
+      position: absolute;
+      bottom: -200px;
+      left: 50%;
+      width: 5px;
+      height: 200px;
+      background: rgb(69, 80, 240);
+      transform-origin: bottom center;
+      transform: rotate(0deg);
+    }
+
+    button {
+      padding: 12px 30px;
+      font-size: 18px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .score {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>💪 Hammer Strength Timing Game 💪</h1>
+
+  <div class="meter-box">
+    <div class="needle" id="needle"></div>
+  </div>
+
+  <button onclick="hit()">Hit!</button>
+  <div class="score" id="score">Score: -</div>
+
+  <script>
+    const needle = document.getElementById('needle');
+    const scoreDisplay = document.getElementById('score');
+    let angle = 0;
+    let direction = 1;
+    let swinging = true;
+    let interval;
+
+    function startSwing() {
+      interval = setInterval(() => {
+        if (!swinging) return;
+
+        angle += direction * 2;
+
+        if (angle >= 180 || angle <= 0) {
+          direction *= -1;
+        }
+
+        needle.style.transform = `rotate(${angle-90}deg)`;
+      }, 10);
+    }
+
+    function hit() {
+      if (!swinging) return;
+
+      swinging = false;
+      clearInterval(interval);
+
+      const score = Math.max(0, 100 - Math.abs(90 - angle));
+      scoreDisplay.textContent = `Score: ${score.toFixed(0)}`;
+
+      
+      setTimeout(() => {
+        resetGame();
+      }, 2000); // reset after 2 sec
+    }
+
+    function resetGame() {
+      angle = 0;
+      direction = 1;
+      swinging = true;
+      scoreDisplay.textContent = 'Score: -';
+      needle.style.transform = `rotate(0deg)`;
+      startSwing();
+    } 
+
+    startSwing();
+  </script>
+
+</body>
+</html>
